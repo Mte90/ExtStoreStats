@@ -10,23 +10,22 @@ from lxml.cssselect import CSSSelector
 ff_ext = 'glotdict'
 gc_ext = 'glotdict/jfdkihdmokdigeobcmnjmgigcgckljgl'
 
-today = time.strftime("%d-%m-%Y")
-data = {}
+today = time.strftime("%Y-%m-%d")
+data = [[], [], []]
 if os.path.isfile('data/' + ff_ext + '.json'):
     with open('data/' + ff_ext + '.json') as data_file:
         data = json.load(data_file)
+        index = len(data[0])
 else:
-    data['firefox'] = {}
-    data['chrome'] = {}
-    data['total'] = {}
-     
+    index = 0
+
 print('Addons Mozilla Extension Gathering for: %s' % ff_ext)
 
 r = requests.get('https://addons.mozilla.org/api/v3/addons/addon/%s/' % ff_ext)
 firefox = json.loads(r.text)
 ff_download = int(firefox['average_daily_users'])
 
-data['firefox'][today] = ff_download
+data[0].append({'date': today, 'value': ff_download})
 
 print('Downloads: %s' % ff_download)
 
@@ -40,15 +39,22 @@ sel = CSSSelector('.e-f-ih')
 results = sel(tree)
 gc_download = int(re.sub("[^0-9]", "", results[0].text))
 
-data['chrome'][today] = gc_download
+data[1].append({'date': today, 'value': gc_download})
 
 print('Downloads: %s' % gc_download)
 
 total = ff_download + gc_download
-data['total'][today] = total
+data[2].append({'date': today, 'value': total})
 
 print('Total Downloads: %s' % str(total))
 
 archive = open('data/' + ff_ext + '.json', 'w')
-archive.write(json.dumps(data))
+archive.write(json.dumps(data, indent=4, sort_keys=True))
 archive.close()
+
+with open('template.html') as template:
+    template = str(template.read()).replace('[-]', ff_ext)
+    template = template.replace('[/]', ff_ext.title())
+    save_template = open('data/' + ff_ext + '.html', 'w')
+    save_template.write(template)
+    save_template.close()

@@ -1,0 +1,36 @@
+<html lang='en'>
+<head>
+    <title>[/] Stats</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css' rel='stylesheet' type='text/css'>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.11.0/metricsgraphics.min.css' rel='stylesheet' type='text/css'>
+    
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.10.0/metricsgraphics.js'></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function(event) {
+            d3.json('[-].json', function(data) {
+                for (var i = 0; i < data.length; i++) {
+                    data[i] = MG.convert.date(data[i], 'date');
+                }
+                MG.data_graphic({
+                    title: "[/] Download Stats",
+                    data: data,
+                    width: 600,
+                    height: 200,
+                    right: 40,
+                    target: '#[-]',
+                    legend: ['Firefox','Chrome','Total'],
+                });
+            })
+        });
+    </script>
+</head>
+
+<body>
+    <div class='container'>
+        <div id='[-]'></div>
+    </div>
+</body>
+</html>
