@@ -70,7 +70,7 @@ for ext in list_ext:
         save_template.close()
 
     html = html + '<a href="' + ff_ext + '.html" target="_blank>'
-    + ff_ext.title() + '</a><br>'
+    html = html +  ff_ext.title() + '</a><br>'
 
 html = html + '</body></html>'
 index = open('/data/index.html', 'w')
