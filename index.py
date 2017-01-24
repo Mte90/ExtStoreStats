@@ -14,6 +14,7 @@ config.readfp(open('config.ini'))
 list = config.get('Extension', 'list').split(",")
 
 today = time.strftime("%Y-%m-%d")
+html = '<html><head><title>ExtStoreStats</title></head><body>'
 
 for ext in list:
     ext = ext.strip()
@@ -67,3 +68,11 @@ for ext in list:
         save_template = open('data/' + ff_ext + '.html', 'w')
         save_template.write(template)
         save_template.close()
+
+    html = html + '<a href="' + ff_ext + '.html" target="_blank>'
+    + ff_ext.title() + '</a><br>'
+
+html = html + '</body></html>'
+index = open('/data/index.html', 'w')
+index.write(html)
+index.close()
