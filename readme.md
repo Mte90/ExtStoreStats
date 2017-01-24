@@ -5,12 +5,12 @@
 Do you want know the number of download for your extensions on different marketplace?  
 Actually is not impossible also have a track of that, the idea is to create a script with cron that everyday save that amount and generate a graph.
 
-**ExtStoreStats is an experimental project/demo, actually write only in console the outputgathered**
-
 # Output
 
+Write in console the status but also generate a json for every extension specified in the `config.ini`, you can see a [demo](https://mte90.github.io/ExtStoreStats/) here.
+
 ```
-mte90:~/Desktop/Prog/ExtStoreStats  $  ./index.py 
+bash:~/ExtStoreStats  $  ./index.py 
 Addons Mozilla Extension Gathering for: glotdict
 Download: 68
 Google Web Store Extension Gathering for: glotdict/jfdkihdmokdigeobcmnjmgigcgckljgl
