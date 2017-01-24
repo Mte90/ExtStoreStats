@@ -7,7 +7,7 @@ Actually is not impossible also have a track of that, the idea is to create a sc
 
 # Output
 
-Write in console the status but also generate a json for every extension specified in the `config.ini`, you can see a [demo](https://mte90.github.io/ExtStoreStats/) here.
+Write in console the status but also generate a json for every extension specified in the `config.ini` (copy `config-sample.ini` and changes on your needs), you can see a [demo](https://mte90.github.io/ExtStoreStats/) here.
 
 ```
 bash:~/ExtStoreStats  $  ./index.py 
