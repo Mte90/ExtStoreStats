@@ -11,12 +11,12 @@ from lxml.cssselect import CSSSelector
 # Load configuration
 config = configparser.RawConfigParser()
 config.readfp(open('config.ini'))
-list = config.get('Extension', 'list').split(",")
+list_ext = config.get('Extension', 'list').split(",")
 
 today = time.strftime("%Y-%m-%d")
 html = '<html><head><title>ExtStoreStats</title></head><body>'
 
-for ext in list:
+for ext in list_ext:
     ext = ext.strip()
     ff_ext = config.get(ext, 'firefox')
     gc_ext = config.get(ext, 'chrome')
