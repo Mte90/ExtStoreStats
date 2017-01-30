@@ -73,6 +73,6 @@ for ext in list_ext:
     html = html +  ff_ext.title() + '</a><br>'
 
 html = html + '</body></html>'
-index = open('/data/index.html', 'w')
+index = open('data/index.html', 'w')
 index.write(html)
 index.close()
