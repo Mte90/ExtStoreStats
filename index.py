@@ -69,7 +69,7 @@ for ext in list_ext:
         save_template.write(template)
         save_template.close()
 
-    html = html + '<a href="' + ff_ext + '.html" target="_blank>'
+    html = html + '<a href="' + ff_ext + '.html" target="_blank">'
     html = html +  ff_ext.title() + '</a><br>'
 
 html = html + '</body></html>'
