@@ -21,7 +21,7 @@ for ext in list_ext:
     ff_ext = config.get(ext, 'firefox')
     gc_ext = config.get(ext, 'chrome')
     generate_json = True
-    
+
     data = [[], [], []]
     if os.path.isfile('data/' + ff_ext + '.json'):
         with open('data/' + ff_ext + '.json') as data_file:
@@ -29,8 +29,8 @@ for ext in list_ext:
             if data[0][-1]['date'] == today:
                 print('%s already processed, skip to another extension!' % ff_ext)
                 generate_json = False
-    
-    if generate_json == True:
+
+    if generate_json is True:
         print('Addons Mozilla Extension Gathering for: %s' % ff_ext)
 
         r = requests.get('https://addons.mozilla.org/api/v3/addons/addon/%s/' % ff_ext)
@@ -75,7 +75,7 @@ for ext in list_ext:
         save_template.close()
 
     html = html + '<a href="' + ff_ext + '.html" target="_blank">'
-    html = html +  ff_ext.title() + '</a><br>'
+    html = html + ff_ext.title() + '</a><br>'
 
 html = html + '</body></html>'
 index = open('data/index.html', 'w')
