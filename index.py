@@ -5,12 +5,14 @@ import time
 import lxml.html
 import os.path
 import re
+import sys
 import configparser
 from lxml.cssselect import CSSSelector
 
 # Load configuration
 config = configparser.RawConfigParser()
-config.readfp(open('config.ini'))
+path = os.path.dirname(sys.argv[0]) + '/'
+config.readfp(open(path + 'config.ini'))
 list_ext = config.get('Extension', 'list').split(",")
 
 today = time.strftime("%Y-%m-%d")
@@ -23,8 +25,8 @@ for ext in list_ext:
     generate_json = True
 
     data = [[], [], []]
-    if os.path.isfile('data/' + ff_ext + '.json'):
-        with open('data/' + ff_ext + '.json') as data_file:
+    if os.path.isfile(path + 'data/' + ff_ext + '.json'):
+        with open(path + 'data/' + ff_ext + '.json') as data_file:
             data = json.load(data_file)
             if data[0][-1]['date'] == today:
                 print('%s already processed, skip to another extension!' % ff_ext)
@@ -63,14 +65,14 @@ for ext in list_ext:
 
         print('Total Downloads: %s' % str(total))
 
-        archive = open('data/' + ff_ext + '.json', 'w')
+        archive = open(path + 'data/' + ff_ext + '.json', 'w')
         archive.write(json.dumps(data, indent=4, sort_keys=True))
         archive.close()
 
-    with open('template.html') as template:
+    with open(path + 'template.html') as template:
         template = str(template.read()).replace('[-]', ff_ext)
         template = template.replace('[/]', ff_ext.title())
-        save_template = open('data/' + ff_ext + '.html', 'w')
+        save_template = open(path + 'data/' + ff_ext + '.html', 'w')
         save_template.write(template)
         save_template.close()
 
@@ -78,6 +80,6 @@ for ext in list_ext:
     html = html + ff_ext.title() + '</a><br>'
 
 html = html + '</body></html>'
-index = open('data/index.html', 'w')
+index = open(path + 'data/index.html', 'w')
 index.write(html)
 index.close()
