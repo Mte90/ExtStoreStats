@@ -2,7 +2,7 @@
 <html lang='en'>
 <head>
     <meta charset="UTF-8">
-    <title>[/] Stats</title>
+    <title>Wordpress-Query-Monitor Stats</title>
 
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
     <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css' rel='stylesheet' type='text/css'>
@@ -12,16 +12,16 @@
     <script src='https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.10.0/metricsgraphics.js'></script>
     <script>
         document.addEventListener("DOMContentLoaded", function(event) {
-            d3.json('[-].json', function(data) {
+            d3.json('wordpress-query-monitor.json', function(data) {
                 for (var i = 0; i < data.length; i++) {
                     data[i] = MG.convert.date(data[i], 'date');
                 }
                 MG.data_graphic({
-                    title: "[/] Download Stats",
+                    title: "Wordpress-Query-Monitor Download Stats",
                     data: data,
                     width: 800,
                     height: 400,
-                    target: '#[-]',
+                    target: '#wordpress-query-monitor',
                     legend: ['Firefox','Chrome','Total'],
                 });
             })
@@ -32,7 +32,7 @@
 <body>
     <div class='container'>
         <center>
-            <div id='[-]'></div>
+            <div id='wordpress-query-monitor'></div>
         </center>
     </div>
 </body>
