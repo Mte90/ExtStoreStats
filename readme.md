@@ -1,4 +1,4 @@
-#ExtStoreStats
+# ExtStoreStats
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/e2e229674466432db73f94c543748918)](https://www.codacy.com/app/mte90net/ExtStoreStats?utm_source=github.com&utm_medium=referral&utm_content=Mte90/ExtStoreStats&utm_campaign=badger)
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)   
 
