@@ -2,17 +2,18 @@
 import requests
 import json
 import time
-import lxml.html
+from lxml import etree
+from lxml import html
+from io import StringIO, BytesIO
 import os.path
 import re
 import sys
 import configparser
-from lxml.cssselect import CSSSelector
 
 # Load configuration
 config = configparser.RawConfigParser()
 path = os.path.dirname(sys.argv[0]) + '/'
-config.readfp(open(path + 'config.ini'))
+config.read_file(open(path + 'config.ini'))
 list_ext = config.get('Extension', 'list').split(",")
 
 today = time.strftime("%Y-%m-%d")
@@ -45,14 +46,19 @@ for ext in list_ext:
 
         print('Google Web Store Extension Gathering for: %s' % gc_ext)
 
-        r = requests.get('https://chrome.google.com/webstore/detail/%s' % gc_ext)
-        # Parser the html
-        tree = lxml.html.fromstring(r.text)
-        # get the selector for the value
-        sel = CSSSelector('.e-f-ih')
-        results = sel(tree)
+        r = requests.get('https://chrome.google.com/webstore/detail/%s' % gc_ext, headers = {
+            'X-Requested-With': 'XMLHttpRequest',
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
+            'Accept': '*/*',
+            'Connection': 'keep-alive',
+            'Pragma': 'no-cache',
+            'Cache-Control': 'no-cache'
+        }, cookies = { 'CONSENT': 'YES+cb.20210912-13-p0.it+FX+750' })
+        results = etree.parse(StringIO(r.text), etree.HTMLParser(recover=True))
+        results = results.xpath('//meta[@itemprop="interactionCount"]/@content')
+        results = results[0].replace('UserDownloads:','')
         if len(results) != 0:
-            gc_download = int(re.sub("[^0-9]", "", results[0].text))
+            gc_download = int(re.sub("[^0-9]", "", results))
         else:
             gc_download = 0
 
