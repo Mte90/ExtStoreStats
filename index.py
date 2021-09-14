@@ -3,8 +3,7 @@ import requests
 import json
 import time
 from lxml import etree
-from lxml import html
-from io import StringIO, BytesIO
+from io import StringIO
 import os.path
 import re
 import sys
