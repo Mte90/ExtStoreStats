@@ -41,29 +41,31 @@ for ext in list_ext:
 
         data[0].append({'date': today, 'value': ff_download})
 
-        print('Downloads: %s' % ff_download)
+        print('Firefox Downloads: %s' % ff_download)
 
-        print('Google Web Store Extension Gathering for: %s' % gc_ext)
+        gc_download = 0
+        if gc_ext != '':
+            print('Google Web Store Extension Gathering for: %s' % gc_ext)
 
-        r = requests.get('https://chrome.google.com/webstore/detail/%s' % gc_ext, headers = {
-            'X-Requested-With': 'XMLHttpRequest',
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
-            'Accept': '*/*',
-            'Connection': 'keep-alive',
-            'Pragma': 'no-cache',
-            'Cache-Control': 'no-cache'
-        }, cookies = { 'CONSENT': 'YES+cb.20210912-13-p0.it+FX+750' })
-        results = etree.parse(StringIO(r.text), etree.HTMLParser(recover=True))
-        results = results.xpath('//meta[@itemprop="interactionCount"]/@content')
-        results = results[0].replace('UserDownloads:','')
-        if len(results) != 0:
-            gc_download = int(re.sub("[^0-9]", "", results))
-        else:
-            gc_download = 0
+            r = requests.get('https://chrome.google.com/webstore/detail/%s' % gc_ext, headers = {
+                'X-Requested-With': 'XMLHttpRequest',
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
+                'Accept': '*/*',
+                'Connection': 'keep-alive',
+                'Pragma': 'no-cache',
+                'Cache-Control': 'no-cache'
+            }, cookies = { 'CONSENT': 'YES+cb.20210912-13-p0.it+FX+750' })
+            results = etree.parse(StringIO(r.text), etree.HTMLParser(recover=True))
+            results = results.xpath('//meta[@itemprop="interactionCount"]/@content')
+            results = results[0].replace('UserDownloads:','')
+            if len(results) != 0:
+                gc_download = int(re.sub("[^0-9]", "", results))
+            else:
+                gc_download = 0
+
+            print('Chrome Downloads: %s' % gc_download)
 
         data[1].append({'date': today, 'value': gc_download})
-
-        print('Downloads: %s' % gc_download)
 
         total = ff_download + gc_download
         data[2].append({'date': today, 'value': total})
