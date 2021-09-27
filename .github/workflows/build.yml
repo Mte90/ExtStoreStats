@@ -30,9 +30,9 @@ jobs:
       env:
         MTE90_TOKEN: ${{ secrets.MTE90_TOKEN }}
       run: |-
-        python index.py
         ls -l
-    - name: Commit and push if README changed
+        python index.py
+    - name: Commit and push if Statistics changed
       run: |-
         git diff
         git config --global user.email "extstorestats-bot@example.com"
