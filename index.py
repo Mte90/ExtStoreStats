@@ -13,6 +13,8 @@ import configparser
 config = configparser.RawConfigParser()
 path = os.path.dirname(sys.argv[0]) + '/'
 config.read_file(open(path + 'config.ini'))
+print(path + 'config.ini')
+print(os.path.dirname(sys.argv[0]) + '/')
 list_ext = config.get('Extension', 'list').split(",")
 
 today = time.strftime("%Y-%m-%d")
