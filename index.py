@@ -12,8 +12,8 @@ import configparser
 # Load configuration
 config = configparser.RawConfigParser()
 path = os.path.dirname(sys.argv[0]) + '/'
-print(path + 'config.ini')
-print(path)
+if path == '/':
+    path = './'
 config.read_file(open(path + 'config.ini'))
 list_ext = config.get('Extension', 'list').split(",")
 

@@ -30,7 +30,6 @@ jobs:
       env:
         MTE90_TOKEN: ${{ secrets.MTE90_TOKEN }}
       run: |-
-        ls -l
         python index.py
     - name: Commit and push if Statistics changed
       run: |-
