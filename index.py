@@ -20,6 +20,19 @@ list_ext = config.get('Extension', 'list').split(",")
 today = time.strftime("%Y-%m-%d")
 html = '<html><head><title>ExtStoreStats</title></head><body>'
 
+def google_download(gc_ext):
+    r = requests.get('https://chrome.google.com/webstore/detail/%s' % gc_ext, headers = {
+                'X-Requested-With': 'XMLHttpRequest',
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
+                'Accept': '*/*',
+                'Connection': 'keep-alive',
+                'Pragma': 'no-cache',
+                'Cache-Control': 'no-cache'
+            }, cookies = { 'CONSENT': 'YES+cb.20210912-13-p0.it+FX+750' })
+    results = etree.parse(StringIO(r.text), etree.HTMLParser(recover=True))
+    results = results.xpath('//meta[@itemprop="interactionCount"]/@content')
+    return results
+
 for ext in list_ext:
     ext = ext.strip()
     ff_ext = config.get(ext, 'firefox')
@@ -49,17 +62,12 @@ for ext in list_ext:
         if gc_ext != '':
             print('Google Web Store Extension Gathering for: %s' % gc_ext)
 
-            r = requests.get('https://chrome.google.com/webstore/detail/%s' % gc_ext, headers = {
-                'X-Requested-With': 'XMLHttpRequest',
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
-                'Accept': '*/*',
-                'Connection': 'keep-alive',
-                'Pragma': 'no-cache',
-                'Cache-Control': 'no-cache'
-            }, cookies = { 'CONSENT': 'YES+cb.20210912-13-p0.it+FX+750' })
-            results = etree.parse(StringIO(r.text), etree.HTMLParser(recover=True))
-            results = results.xpath('//meta[@itemprop="interactionCount"]/@content')
-            results = results[0].replace('UserDownloads:','')
+            results = google_download(gc_ext)
+            try:
+                results = results[0].replace('UserDownloads:','')
+            except:
+                results = google_download(gc_ext)
+                results = results[0].replace('UserDownloads:','')
             if len(results) != 0:
                 gc_download = int(re.sub("[^0-9]", "", results))
             else:
