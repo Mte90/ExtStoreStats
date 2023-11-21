@@ -2,12 +2,13 @@
 import requests
 import json
 import time
-from lxml import etree
 from io import StringIO
+from lxml import etree
 import os.path
 import re
 import sys
 import configparser
+from requests_html import HTMLSession
 
 # Load configuration
 config = configparser.RawConfigParser()
@@ -21,17 +22,17 @@ today = time.strftime("%Y-%m-%d")
 html = '<html><head><title>ExtStoreStats</title></head><body>'
 
 def google_download(gc_ext):
-    r = requests.get('https://chrome.google.com/webstore/detail/%s' % gc_ext, headers = {
+    session = HTMLSession()
+    r = session.get('https://chromewebstore.google.com/detail/%s' % gc_ext, headers = {
                 'X-Requested-With': 'XMLHttpRequest',
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.3325.181 Safari/547.36',
                 'Accept': '*/*',
                 'Connection': 'keep-alive',
                 'Pragma': 'no-cache',
                 'Cache-Control': 'no-cache'
-            }, cookies = { 'CONSENT': 'YES+cb.20210912-13-p0.it+FX+750' })
-    results = etree.parse(StringIO(r.text), etree.HTMLParser(recover=True))
-    results = results.xpath('//meta[@itemprop="interactionCount"]/@content')
-    return results
+            }, cookies = { 'CONSENT': 'YES+IT.en+20150705-15-0' })
+    results = r.html.find('c-wiz section section div div')
+    return results[1].text
 
 for ext in list_ext:
     ext = ext.strip()
@@ -62,12 +63,12 @@ for ext in list_ext:
         if gc_ext != '':
             print('Google Web Store Extension Gathering for: %s' % gc_ext)
 
-            results = google_download(gc_ext)
+            result = google_download(gc_ext)
             try:
-                results = results[0].replace('UserDownloads:','')
+                results = result.replace('ExtensionWorkflow & Planning','')
             except:
                 results = google_download(gc_ext)
-                results = results[0].replace('UserDownloads:','')
+                results = result.replace('ExtensionWorkflow & Planning','')
             if len(results) != 0:
                 gc_download = int(re.sub("[^0-9]", "", results))
             else:
