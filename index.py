@@ -65,7 +65,7 @@ for ext in list_ext:
 
             result = google_download(gc_ext)
             try:
-                results = result.replace('ExtensionWorkflow & Planning','')
+                results = result.replace('ExtensionWorkflow & Planning','').replace('users','')
             except:
                 results = google_download(gc_ext)
                 results = result.replace('ExtensionWorkflow & Planning','')
