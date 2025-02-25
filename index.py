@@ -31,8 +31,10 @@ def google_download(gc_ext):
                 'Pragma': 'no-cache',
                 'Cache-Control': 'no-cache'
             }, cookies = { 'CONSENT': 'YES+IT.en+20150705-15-0' })
-    results = r.html.find('c-wiz section section div div')
-    return results[3].text
+    html = r.html.text.split("\n")
+    for line in html:
+        if " users" in line:
+            return int(line.replace("ExtensionWorkflow & Planning", "").replace(" users", ""))
 
 for ext in list_ext:
     ext = ext.strip()
@@ -63,17 +65,9 @@ for ext in list_ext:
         if gc_ext != '':
             print('Google Web Store Extension Gathering for: %s' % gc_ext)
 
-            result = google_download(gc_ext)
-            try:
-                results = result.replace('ExtensionWorkflow & Planning','').replace('users','')
-            except:
-                results = google_download(gc_ext)
-                results = result.replace('ExtensionWorkflow & Planning','').replace('users','')
-            if len(results) != 0:
-                gc_download = int(re.sub("[^0-9]", "", results))
-            else:
+            gc_download = google_download(gc_ext)
+            if gc_download == 0:
                 gc_download = 0
-            print(results)
             print('Chrome Downloads: %s' % gc_download)
 
         data[1].append({'date': today, 'value': gc_download})
