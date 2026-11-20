@@ -2,13 +2,10 @@
 import requests
 import json
 import time
-from io import StringIO
-from lxml import etree
 import os.path
 import re
 import sys
 import configparser
-from requests_html import HTMLSession
 
 # Load configuration
 config = configparser.RawConfigParser()
@@ -22,19 +19,18 @@ today = time.strftime("%Y-%m-%d")
 html = '<html><head><title>ExtStoreStats</title></head><body>'
 
 def google_download(gc_ext):
-    session = HTMLSession()
-    r = session.get('https://chromewebstore.google.com/detail/%s' % gc_ext, headers = {
+    r = requests.get('https://chromewebstore.google.com/detail/%s' % gc_ext, headers = {
                 'X-Requested-With': 'XMLHttpRequest',
                 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.3325.181 Safari/547.36',
                 'Accept': '*/*',
                 'Connection': 'keep-alive',
                 'Pragma': 'no-cache',
                 'Cache-Control': 'no-cache'
-            }, cookies = { 'CONSENT': 'YES+IT.en+20150705-15-0' })
-    html = r.html.text.split("\n")
-    for line in html:
-        if " users" in line:
-            return int(line.replace("ExtensionWorkflow & Planning", "").replace(" users", ""))
+            }, cookies = { 'SOCS': 'CAISHAgBEhJnd3NfMjAyMzA4MTAtMF9SQzIaAmVuIAEaBgiA_LyaBg' })
+    match = re.search(r'([\d,]+)\s*\+?\s*users', r.text)
+    if match is None:
+        raise RuntimeError('Chrome Web Store user count not found for %s (page layout changed?)' % gc_ext)
+    return int(match.group(1).replace(',', ''))
 
 for ext in list_ext:
     ext = ext.strip()
@@ -66,8 +62,6 @@ for ext in list_ext:
             print('Google Web Store Extension Gathering for: %s' % gc_ext)
 
             gc_download = google_download(gc_ext)
-            if gc_download == 0:
-                gc_download = 0
             print('Chrome Downloads: %s' % gc_download)
 
         data[1].append({'date': today, 'value': gc_download})
